@@ -416,13 +416,10 @@ def revoke_token(db: Session, jti: str, expires_at: dt.datetime) -> RevokedToken
     return token
 
 
-def create_user(db: Session, email: str) -> User:
-    """Create a new user"""
-    user = User(email=email)
-    db.add(user)
-    db.commit()
-    db.refresh(user)
-    return user
+# Database initialization
+def init_db():
+    """Create all tables"""
+    Base.metadata.create_all(bind=engine)
 
 def cleanup_expired_revoked_tokens(db: Session, batch_size: int = 1000) -> int:
     """Delete expired revoked tokens in batches to avoid lock contention."""
